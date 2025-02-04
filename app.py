@@ -10,7 +10,7 @@ st.title('Embedding Similarity App')
 #if uploaded_file is not None:
 # Load the numpy array
 #embeddings = np.load(BytesIO(uploaded_file.read()))
-embeddings = np.random.rand(10, 100)
+embeddings = np.random.rand(100, 50) #--------------------------------------------
 # Display the shape of the embeddings
 st.write(f"Embeddings shape: {embeddings.shape}")
 
@@ -35,6 +35,6 @@ if st.button('Submit'):
     # Get the top-k most similar indexes
     top_k = 5
     top_k_indexes = np.argsort(similarities[0])[-top_k:][::-1]
-
+    #----------------------------------
     # Display the top-k most similar indexes
-    st.write('Top-k most similar indexes:', top_k_indexes)
+    st.write('Top-k most similar indexes:', top_k_indexes) #------------------------------------
