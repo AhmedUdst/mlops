@@ -10,7 +10,7 @@ st.title('Embedding Similarity App')
 #if uploaded_file is not None:
 # Load the numpy array
 #embeddings = np.load(BytesIO(uploaded_file.read()))
-GITHUB_URL=https://github.com/AhmedUdst/mlops/blob/main/document_embeddings.npy
+GITHUB_URL='https://github.com/AhmedUdst/mlops/blob/main/document_embeddings.npy'
 embeddings = load_embeddings(GITHUB_URL)
 # Display the shape of the embeddings
 st.write(f"Embeddings shape: {embeddings.shape}")
