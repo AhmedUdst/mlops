@@ -5,6 +5,8 @@ import requests
 from io import BytesIO
 
 st.title('Embedding Similarity App')
+# ✅ Load SentenceTransformer Model
+model = SentenceTransformer('all-MiniLM-L6-v2')  # Efficient sentence embedding model
 
 # ✅ Corrected GitHub raw URL
 GITHUB_URL = "https://raw.githubusercontent.com/AhmedUdst/mlops/main/document_embeddings.npy"
@@ -40,7 +42,7 @@ if embeddings is not None:
     # Submit button
     if st.button('Submit'):
         if user_input.strip():
-            user_embedding = np.random.rand(1, embeddings.shape[1])  # Match embedding dimension
+            user_embedding = model.encode([user_input])
 
             # Compute cosine similarity
             similarities = cosine_similarity(user_embedding, embeddings)
