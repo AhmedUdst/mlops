@@ -1,41 +1,57 @@
 import streamlit as st
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
+import requests
 from io import BytesIO
 
 st.title('Embedding Similarity App')
 
-#uploaded_file = st.file_uploader("Upload a numpy array of embeddings", type=["npy"])
-
-#if uploaded_file is not None:
-# Load the numpy array
-#embeddings = np.load(BytesIO(uploaded_file.read()))
+# ✅ Corrected GitHub raw URL
 GITHUB_URL = "https://raw.githubusercontent.com/AhmedUdst/mlops/main/document_embeddings.npy"
+
+@st.cache_data
+def load_embeddings(url):
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            st.success("✅ Successfully loaded embeddings from GitHub.")
+            return np.load(BytesIO(response.content))
+        else:
+            st.error(f"❌ Failed to load embeddings. HTTP Status Code: {response.status_code}")
+            return None
+    except Exception as e:
+        st.error(f"⚠️ Error loading embeddings: {str(e)}")
+        return None
+
+# ✅ Load embeddings
 embeddings = load_embeddings(GITHUB_URL)
-# Display the shape of the embeddings
-st.write(f"Embeddings shape: {embeddings.shape}")
 
-# Define the list of models (for demonstration purposes)
-models = ['Model A', 'Model B', 'Model C']
+# ✅ Check if embeddings loaded correctly
+if embeddings is not None:
+    st.write(f"✅ Embeddings shape: {embeddings.shape}")
 
-# Create a drop-down list for model selection
-selected_model = st.selectbox('Select a model:', models)
+    # Model selection dropdown
+    models = ['Model A', 'Model B', 'Model C']
+    selected_model = st.selectbox('Select a model:', models)
 
-# Create an input box for user text input
-user_input = st.text_input('Enter your text:')
+    # User text input
+    user_input = st.text_input('Enter your text:')
 
-# Create a submit button
-if st.button('Submit'):
-    # Placeholder for converting user input to embeddings
-    # Replace this with actual model prediction logic
-    user_embedding = np.random.rand(1, 100)
+    # Submit button
+    if st.button('Submit'):
+        if user_input.strip():
+            user_embedding = np.random.rand(1, embeddings.shape[1])  # Match embedding dimension
 
-    # Calculate cosine similarity
-    similarities = cosine_similarity(user_embedding, embeddings)
+            # Compute cosine similarity
+            similarities = cosine_similarity(user_embedding, embeddings)
 
-    # Get the top-k most similar indexes
-    top_k = 5
-    top_k_indexes = np.argsort(similarities[0])[-top_k:][::-1]
-    #----------------------------------
-    # Display the top-k most similar indexes
-    st.write('Top-k most similar indexes:', top_k_indexes) #------------------------------------
+            # Get top-k most similar indexes
+            top_k = 5
+            top_k_indexes = np.argsort(similarities[0])[-top_k:][::-1]
+
+            # Display results
+            st.write('🔥 Top-k most similar indexes:', top_k_indexes)
+        else:
+            st.warning("⚠️ Please enter text before submitting.")
+else:
+    st.error("❌ Could not load embeddings. Please check the GitHub URL or file permissions.")
