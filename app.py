@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import requests
 from io import BytesIO
+from sentence_transformers import SentenceTransformer
 
 st.title('Embedding Similarity App')
 # ✅ Load SentenceTransformer Model
