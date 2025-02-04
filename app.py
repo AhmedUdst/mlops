@@ -3,11 +3,9 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import requests
 from io import BytesIO
-from sentence_transformers import SentenceTransformer
+from gensim.models import Word2Vec
 
 st.title('Embedding Similarity App')
-# ✅ Load SentenceTransformer Model
-model = SentenceTransformer('all-MiniLM-L6-v2')  # Efficient sentence embedding model
 
 # ✅ Corrected GitHub raw URL
 GITHUB_URL = "https://raw.githubusercontent.com/AhmedUdst/mlops/main/document_embeddings.npy"
@@ -43,7 +41,8 @@ if embeddings is not None:
     # Submit button
     if st.button('Submit'):
         if user_input.strip():
-            user_embedding = model.encode([user_input])
+            model = Word2Vec(sentences=user_input, vector_size=5, window=10, min_count=50, workers=4)
+            user_embedding = [model.wv[word] for word in user_input if word in model.wv]
 
             # Compute cosine similarity
             similarities = cosine_similarity(user_embedding, embeddings)
