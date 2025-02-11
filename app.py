@@ -3,7 +3,10 @@ import sys
 
 def install_packages():
     """Force install missing dependencies."""
-    packages = ["numpy==1.23.5", "scipy==1.8.1", "gensim==4.1.2", "Cython", "setuptools==65.5.0", "wheel", "smart_open"]
+    packages = [
+        "numpy==1.23.5", "scipy==1.7.3", "gensim==4.0.1", 
+        "Cython", "setuptools==65.5.0", "wheel", "smart_open"
+    ]
     for package in packages:
         try:
             subprocess.run([sys.executable, "-m", "pip", "install", package], check=True)
@@ -16,6 +19,7 @@ try:
 except ImportError:
     install_packages()
     from gensim.models import Word2Vec  # Retry import
+
 
 
 
