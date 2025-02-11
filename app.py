@@ -3,21 +3,19 @@ import sys
 
 def install_packages():
     """Force install missing dependencies."""
-    packages = ["gensim==4.2.0", "scipy==1.8.1"]
+    packages = ["numpy==1.23.5", "scipy==1.8.1", "gensim==4.1.2", "Cython", "setuptools==65.5.0", "wheel", "smart_open"]
     for package in packages:
         try:
             subprocess.run([sys.executable, "-m", "pip", "install", package], check=True)
         except subprocess.CalledProcessError:
             print(f"⚠️ Failed to install {package}, skipping...")
 
-# Try importing gensim and scipy, install if missing
+# Try importing gensim and install if missing
 try:
     from gensim.models import Word2Vec
-    from scipy.linalg import get_blas_funcs
 except ImportError:
     install_packages()
-    from gensim.models import Word2Vec
-    from scipy.linalg import get_blas_funcs  # Retry import
+    from gensim.models import Word2Vec  # Retry import
 
 
 
