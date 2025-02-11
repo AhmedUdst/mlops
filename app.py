@@ -1,3 +1,19 @@
+import subprocess
+import sys
+
+# Force install compatible scipy version
+def install_packages():
+    packages = ["scipy==1.9.3"]
+    for package in packages:
+        subprocess.run([sys.executable, "-m", "pip", "install", package], check=True)
+
+try:
+    from scipy.linalg import get_blas_funcs, triu  # This will trigger an error if scipy is wrong
+except ImportError:
+    install_packages()
+    from scipy.linalg import get_blas_funcs, triu  # Retry import
+
+
 import streamlit as st
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
