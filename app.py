@@ -22,7 +22,7 @@ user_input = st.text_input('Enter your text:')
 # Submit button
 if st.button('Submit'):
     if user_input.strip():
-        user_embedding = np.random.rand(1, 500)  # Simulate embedding
+        user_embedding = np.random.rand(1, 200)  # Simulate embedding
 
         # Compute cosine similarity
         similarities = cosine_similarity(user_embedding, embeddings)
