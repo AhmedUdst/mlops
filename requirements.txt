@@ -1,11 +1,5 @@
 streamlit
 pandas
-numpy==1.23.5
+numpy
 scikit-learn
-requests
-gensim==4.0.1
-scipy==1.7.3
-Cython
-setuptools==65.5.0
-wheel
-smart_open
+
