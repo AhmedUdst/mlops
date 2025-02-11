@@ -1,17 +1,24 @@
 import subprocess
 import sys
 
-# Force install compatible scipy version
 def install_packages():
-    packages = ["scipy==1.9.3"]
+    """Force install missing dependencies."""
+    packages = ["gensim==4.2.0", "scipy==1.8.1"]
     for package in packages:
-        subprocess.run([sys.executable, "-m", "pip", "install", package], check=True)
+        try:
+            subprocess.run([sys.executable, "-m", "pip", "install", package], check=True)
+        except subprocess.CalledProcessError:
+            print(f"⚠️ Failed to install {package}, skipping...")
 
+# Try importing gensim and scipy, install if missing
 try:
-    from scipy.linalg import get_blas_funcs, triu  # This will trigger an error if scipy is wrong
+    from gensim.models import Word2Vec
+    from scipy.linalg import get_blas_funcs
 except ImportError:
     install_packages()
-    from scipy.linalg import get_blas_funcs, triu  # Retry import
+    from gensim.models import Word2Vec
+    from scipy.linalg import get_blas_funcs  # Retry import
+
 
 
 import streamlit as st
@@ -19,8 +26,7 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import requests
 from io import BytesIO
-import subprocess
-import sys
+
 
 # ✅ Ensure gensim is installed
 try:
