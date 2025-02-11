@@ -3,11 +3,19 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import requests
 from io import BytesIO
-import gensim.downloader as api
+import subprocess
+import sys
+
+# ✅ Ensure gensim is installed
+try:
+    from gensim.models import Word2Vec
+except ModuleNotFoundError:
+    subprocess.run([sys.executable, "-m", "pip", "install", "gensim"])
+    from gensim.models import Word2Vec
 
 st.title('Embedding Similarity App')
 
-# ✅ Corrected GitHub raw URL
+# ✅ Corrected GitHub raw URL for embeddings
 GITHUB_URL = "https://raw.githubusercontent.com/AhmedUdst/mlops/main/document_embeddings.npy"
 
 @st.cache_data
@@ -26,32 +34,37 @@ def load_embeddings(url):
         return None
 
 @st.cache_resource
-def load_word2vec():
-    """Load a pre-trained Word2Vec model"""
-    try:
-        st.info("⏳ Loading Word2Vec model...")
-        model = api.load("word2vec-google-news-300")  # Pre-trained model
-        st.success("✅ Word2Vec model loaded successfully.")
-        return model
-    except Exception as e:
-        st.error(f"⚠️ Error loading Word2Vec model: {str(e)}")
-        return None
+def train_word2vec():
+    """Train a simple Word2Vec model on example sentences"""
+    st.info("⏳ Training Word2Vec model...")
+    sample_sentences = [
+        ["this", "is", "an", "example", "sentence"],
+        ["word", "embedding", "models", "are", "useful"],
+        ["streamlit", "is", "a", "great", "tool"],
+        ["natural", "language", "processing", "is", "interesting"],
+        ["word2vec", "is", "used", "for", "similarity"]
+    ]
+    
+    model = Word2Vec(sentences=sample_sentences, vector_size=100, window=5, min_count=1, workers=4)
+    
+    st.success("✅ Word2Vec model trained successfully.")
+    return model
 
 def get_sentence_embedding(sentence, model):
-    """Convert user input into a vector using Word2Vec"""
-    words = sentence.split()
-    word_vectors = [model[word] for word in words if word in model]
+    """Convert user input into a vector using trained Word2Vec"""
+    words = sentence.lower().split()
+    word_vectors = [model.wv[word] for word in words if word in model.wv]
 
     if not word_vectors:  # If no words are found in the model
         return None
 
-    return np.mean(word_vectors, axis=0)  # Take average of word embeddings
+    return np.mean(word_vectors, axis=0)  # Take the average of word embeddings
 
 # ✅ Load embeddings
 embeddings = load_embeddings(GITHUB_URL)
 
-# ✅ Load Word2Vec model
-word2vec_model = load_word2vec()
+# ✅ Train Word2Vec model
+word2vec_model = train_word2vec()
 
 # ✅ Check if embeddings loaded correctly
 if embeddings is not None and word2vec_model is not None:
