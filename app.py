@@ -3,11 +3,19 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import requests
 from io import BytesIO
-import gensim.downloader as api
+import os
+import subprocess
+
+# ✅ Ensure gensim is installed
+try:
+    import gensim.downloader as api
+except ModuleNotFoundError:
+    subprocess.run(["pip", "install", "gensim"])
+    import gensim.downloader as api
 
 st.title('Embedding Similarity App')
 
-# ✅ Corrected GitHub raw URL
+# ✅ Corrected GitHub raw URL for embeddings
 GITHUB_URL = "https://raw.githubusercontent.com/AhmedUdst/mlops/main/document_embeddings.npy"
 
 @st.cache_data
