@@ -8,6 +8,7 @@ st.title('Reuters Article Similarity App')
 
 # ✅ Load embeddings and Reuters articles
 embeddings = np.load("document_embeddings.npy")
+embeddings = embeddings[:500]
 articles = np.load("articles.npy", allow_pickle=True)  # Load saved Reuters articles
 
 st.write(f"✅ Loaded {len(articles)} articles.")
@@ -22,7 +23,7 @@ user_input = st.text_input('Enter your text:')
 # Submit button
 if st.button('Submit'):
     if user_input.strip():
-        user_embedding = np.random.rand(1, 200)  # Simulate embedding
+        user_embedding = np.random.rand(1, embeddings.shape[1])  # Simulate embedding
 
         # Compute cosine similarity
         similarities = cosine_similarity(user_embedding, embeddings)
