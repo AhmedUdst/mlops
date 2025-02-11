@@ -8,3 +8,4 @@ scipy==1.8.1
 Cython
 setuptools==65.5.0
 wheel
+smart_open
