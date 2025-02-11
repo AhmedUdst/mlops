@@ -2,5 +2,6 @@ streamlit
 pandas
 numpy
 scikit-learn
-gensim
+gensim==4.2.0
+scipy==1.9.3
 requests
